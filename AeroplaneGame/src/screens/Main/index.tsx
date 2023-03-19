@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Switch } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useTheme } from '../../hooks';
 import { useLazyFetchOneQuery } from '../../services/modules/users';
 import { changeTheme, ThemeState } from '../../store/theme';
-import { Grid } from '../../components';
+import { GameButton, Grid, Headline } from '../../components';
+import plane from '../../resources/images/plane.png';
 import i18next from 'i18next';
+import FastImage from 'react-native-fast-image';
 
 const GameScreen = () => {
   const { Common, Fonts, Gutters, Layout, Images, darkMode: isDark } = useTheme();
@@ -28,9 +30,16 @@ const GameScreen = () => {
   };
 
   return (
-    <View style={{ height: '100%', width: '100%' }}>
-      <Text>'Grid'</Text>
-      <Grid factor={5} />
+    <View style={{ height: '100%', width: '100%', backgroundColor: isDark ? 'midnightblue' : 'white' }}>
+      <Headline />
+      <Grid factor={3} />
+      <Switch
+        trackColor={{ false: '#767577', true: '#81b0ff' }}
+        thumbColor={!isDark ? '#f5dd4b' : '#f4f3f4'}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => onChangeTheme({ darkMode: !isDark })}
+        value={!isDark}
+      />
     </View>
   );
 };

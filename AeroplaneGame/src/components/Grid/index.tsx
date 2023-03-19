@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Text, TouchableOpacity, ScrollView, Image, Alert, Pressable } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 import { useDispatch } from 'react-redux';
 import { useTheme } from '../../hooks';
 import { changeTheme, ThemeState } from '../../store/theme';
-import i18next from 'i18next';
-import RefreshButton from '../RefreshGame';
+import GameButton from '../Button';
+import { styles } from './styles';
+import plane from '../../resources/images/plane.png';
+import FastImage from 'react-native-fast-image';
+import { generateGridArr, getRandomCell } from './utils';
 
 interface GridInterface {
   /**
@@ -13,93 +16,66 @@ interface GridInterface {
    */
   factor: number;
 }
-
 const Grid = (props: GridInterface) => {
   const { factor } = props;
 
   const { darkMode: isDark } = useTheme();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [planeDestroyed, setPlaneIsDestroyed] = useState(false);
-  const [strikeCounter, setStrikeCounter] = useState<number>(0);
 
-  let counter = 0;
+  const strikeRef = useRef(0);
+  const planeRef = useRef(false);
 
-  const gridArr: { c: number; r: number; isPlane?: boolean | undefined }[] = [];
+  // const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
+  //   dispatch(changeTheme({ theme, darkMode }));
+  // };
 
-  const randomCell = {
-    column: Math.floor(Math.random() * (factor - 1)) + 1,
-    row: Math.floor(Math.random() * (factor - 1)) + 1,
-  };
+  const setPlane = useCallback(
+    (striken?: boolean) => {
+      planeRef.current === true && console.log('plane set');
 
-  const generateGridArr = () => {
-    console.log('RANDOM : ' + randomCell.column + ' ' + randomCell.row);
-    for (let i = factor; i > 0; i--) {
-      for (let j = factor; j > 0; j--) {
-        if (i === randomCell.column && j === randomCell.row) {
-          gridArr.unshift({ r: j, c: i, isPlane: true });
-        } else {
-          gridArr.unshift({ r: j, c: i });
-        }
-      }
-    }
-    console.log(gridArr);
-    return gridArr;
-  };
-  const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-    dispatch(changeTheme({ theme, darkMode }));
-  };
+      return planeRef.current && setPlaneIsDestroyed(!!striken);
+    },
+    [planeRef.current],
+  );
 
   return (
-    <View>
+    <View style={styles.gridWrapper}>
       <FlatGrid
         itemDimension={50}
-        data={generateGridArr()}
+        data={generateGridArr(factor, getRandomCell(factor))}
         spacing={5}
         adjustGridToStyles={true}
-        style={{ maxWidth: 500, maxHeight: 500 }}
+        style={styles.gridContainer}
         maxItemsPerRow={factor}
         staticDimension={factor * 50 + factor * 10}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={
-              isDark
-                ? {
-                    minHeight: 50,
-                    borderRadius: 10,
-                    backgroundColor: 'darkgrey',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }
-                : {
-                    minHeight: 50,
-                    borderRadius: 10,
-                    backgroundColor: 'blue',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }
-            }
+            style={[styles.gridLight, isDark && styles.gridDark]}
             onPress={() => {
-              console.log({ column: item.c, row: item.r });
-              item.isPlane && setPlaneIsDestroyed(true);
-              !item.isPlane && counter++;
-              item.isPlane && setStrikeCounter(counter);
-              console.log(counter);
+              item.isPlane && (planeRef.current = true);
+              strikeRef.current = strikeRef.current + 1;
               item.isPlane && console.log('destroyed');
+              setPlane(item.isPlane);
+              console.log('STATE: ' + planeDestroyed);
+              console.log('REF: ' + planeRef.current);
             }}
-          >
-            <Text>{item.c + '' + item.r}</Text>
-          </TouchableOpacity>
+          />
         )}
       />
-      {planeDestroyed && <Text>{'Strike counter: ' + strikeCounter}</Text>}
-      <RefreshButton
-        onPress={() => {
-          console.log('refresh');
-          setPlaneIsDestroyed(false);
-          counter = 0;
-        }}
-      />
+      {planeDestroyed && <Text>{'Strike counter: ' + strikeRef.current}</Text>}
+      {planeDestroyed && (
+        <GameButton
+          title={'Refresh'}
+          onPress={() => {
+            console.log('refresh');
+            planeRef.current = false;
+            strikeRef.current = 0;
+            setPlaneIsDestroyed(false);
+          }}
+        />
+      )}
     </View>
   );
 };
