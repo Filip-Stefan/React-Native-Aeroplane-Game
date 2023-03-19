@@ -1,34 +1,17 @@
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import {
-  Common,
-  Fonts,
-  Gutters,
-  Images,
-  Layout,
-  themes,
-  DefaultVariables,
-} from '../theme';
+import { Common, Fonts, Gutters, Images, Layout, themes, DefaultVariables } from '../theme';
 import { ThemeState } from '../store/theme';
-import {
-  ThemeVariables,
-  Theme,
-  ThemeNavigationTheme,
-  ThemeNavigationColors,
-} from '../../@types/theme';
+import { ThemeVariables, Theme, ThemeNavigationTheme, ThemeNavigationColors } from '../../@types/theme';
 
 export default function () {
   // Get the scheme device
   const colorScheme = useColorScheme();
 
   // Get current theme from the store
-  const currentTheme = useSelector(
-    (state: { theme: ThemeState }) => state.theme.theme,
-  );
-  const isDark = useSelector(
-    (state: { theme: ThemeState }) => state.theme.darkMode,
-  );
+  const currentTheme = useSelector((state: { theme: ThemeState }) => state.theme.theme);
+  const isDark = useSelector((state: { theme: ThemeState }) => state.theme.darkMode);
   const darkMode = isDark === null ? colorScheme === 'dark' : isDark;
 
   let variables = {};
@@ -48,8 +31,7 @@ export default function () {
   }
 
   if (darkMode) {
-    const { Variables, ...darkThemeConfig } =
-      themes[`${currentTheme}_dark` as keyof typeof themes] || {};
+    const { Variables, ...darkThemeConfig } = themes[`${currentTheme}_dark` as keyof typeof themes] || {};
 
     darkVariables = Variables;
     partialDarkTheme = darkThemeConfig;
@@ -70,13 +52,7 @@ export default function () {
   });
 
   // Build the default theme
-  const baseTheme: Theme<
-    typeof fonts,
-    typeof gutters,
-    typeof images,
-    typeof layout,
-    typeof common
-  > = {
+  const baseTheme: Theme<typeof fonts, typeof gutters, typeof images, typeof layout, typeof common> = {
     Fonts: fonts,
     Gutters: gutters,
     Images: images,
@@ -97,10 +73,7 @@ export default function () {
 /**
  * Generate Theme with theme variables
  */
-const formatTheme = <F, G, I, L, C>(
-  variables: ThemeVariables,
-  theme: Partial<Theme<F, G, I, L, C>>,
-) => {
+const formatTheme = <F, G, I, L, C>(variables: ThemeVariables, theme: Partial<Theme<F, G, I, L, C>>) => {
   return Object.entries(theme).reduce((acc, [name, generate]) => {
     return {
       ...acc,
@@ -113,17 +86,10 @@ const formatTheme = <F, G, I, L, C>(
  * Merge all variables for building the theme
  * baseTheme <- currentTheme <- currentDarkTheme
  */
-const mergeVariables = (
-  themeConfig: Partial<ThemeVariables>,
-  darkThemeConfig: Partial<ThemeVariables>,
-) => {
+const mergeVariables = (themeConfig: Partial<ThemeVariables>, darkThemeConfig: Partial<ThemeVariables>) => {
   return Object.entries(DefaultVariables).reduce((acc, [group, vars]) => {
-    const theme:
-      | Record<keyof typeof DefaultVariables, typeof vars>
-      | undefined = (themeConfig as any)[group];
-    const darkTheme:
-      | Record<keyof typeof DefaultVariables, typeof vars>
-      | undefined = (darkThemeConfig as any)[group];
+    const theme: Record<keyof typeof DefaultVariables, typeof vars> | undefined = (themeConfig as any)[group];
+    const darkTheme: Record<keyof typeof DefaultVariables, typeof vars> | undefined = (darkThemeConfig as any)[group];
 
     return {
       ...acc,
@@ -148,10 +114,7 @@ const buildTheme = <F, G, I, L, C>(
   return {
     ...mergeTheme(baseTheme, themeConfig, darkThemeConfig),
     darkMode,
-    NavigationTheme: mergeNavigationTheme(
-      darkMode ? DarkTheme : DefaultTheme,
-      baseTheme.NavigationColors,
-    ),
+    NavigationTheme: mergeNavigationTheme(darkMode ? DarkTheme : DefaultTheme, baseTheme.NavigationColors),
   };
 };
 

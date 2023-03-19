@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+import { NavigationColors } from '../../theme/Variables';
+import { Colors } from '../../theme/Variables';
 
 export const styles = StyleSheet.create({
   planeImage: {
@@ -9,7 +11,10 @@ export const styles = StyleSheet.create({
   text: {
     fontSize: 30,
     fontWeight: '700',
-    color: 'black',
+    color: Colors.textGray400,
+  },
+  textDark: {
+    color: Colors.error,
   },
   wrapper: {
     width: '100%',

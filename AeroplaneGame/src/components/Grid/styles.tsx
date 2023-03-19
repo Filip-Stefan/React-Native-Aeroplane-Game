@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '../../theme/Variables';
 
 export const styles = StyleSheet.create({
   gridWrapper: {
@@ -12,12 +13,12 @@ export const styles = StyleSheet.create({
   gridLight: {
     minHeight: 50,
     borderRadius: 10,
-    backgroundColor: 'darkgrey',
+    backgroundColor: Colors.textGray200,
     alignItems: 'center',
     justifyContent: 'center',
   },
   gridDark: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.circleButtonBackground,
   },
   planeImage: {
     height: 45,

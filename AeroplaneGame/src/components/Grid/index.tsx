@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import dayjs from 'dayjs';
 import { FlatGrid } from 'react-native-super-grid';
 import { useDispatch } from 'react-redux';
 import { useTheme } from '../../hooks';
@@ -9,6 +10,7 @@ import { styles } from './styles';
 import plane from '../../resources/images/plane.png';
 import FastImage from 'react-native-fast-image';
 import { generateGridArr, getRandomCell } from './utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface GridInterface {
   /**
@@ -23,23 +25,47 @@ const Grid = (props: GridInterface) => {
   // const dispatch = useDispatch();
 
   const [planeDestroyed, setPlaneIsDestroyed] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<string[]>([]);
 
   const strikeRef = useRef(0);
   const planeRef = useRef(false);
+  const timeRef = useRef(0);
 
+  const now = dayjs().unix();
+
+  const getLb = async () => {
+    const value = await AsyncStorage.getItem('@leaderboards');
+    if (value !== null) {
+      console.log('NU E NULL');
+      setLeaderboard(JSON.parse(value));
+      return JSON.parse(value);
+    }
+  };
+
+  const updateLb = async (lb: string[]) => {
+    await AsyncStorage.setItem('@leaderboards', JSON.stringify(lb));
+  };
+
+  useEffect(() => {
+    getLb();
+  }, []);
+  console.log('LEADERBOARD: ' + leaderboard);
   // const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
   //   dispatch(changeTheme({ theme, darkMode }));
   // };
-
   const setPlane = useCallback(
     (striken?: boolean) => {
       planeRef.current === true && console.log('plane set');
-
+      strikeRef.current === 0 && (timeRef.current = dayjs().unix());
+      planeRef.current === true && console.log('TIME: ' + dayjs().diff(timeRef.current, 'day'));
+      planeRef.current === true && console.log(timeRef.current);
+      planeRef.current === true && leaderboard.length >= 0 && leaderboard.push(strikeRef.current.toString());
+      planeRef.current === true && leaderboard.length && updateLb(leaderboard);
       return planeRef.current && setPlaneIsDestroyed(!!striken);
     },
     [planeRef.current],
   );
-
+  // console.log(getData());
   return (
     <View style={styles.gridWrapper}>
       <FlatGrid
@@ -56,6 +82,7 @@ const Grid = (props: GridInterface) => {
             onPress={() => {
               item.isPlane && (planeRef.current = true);
               strikeRef.current = strikeRef.current + 1;
+              // strikeRef.current === 0 && (timeRef.current = dayjs());
               item.isPlane && console.log('destroyed');
               setPlane(item.isPlane);
               console.log('STATE: ' + planeDestroyed);
