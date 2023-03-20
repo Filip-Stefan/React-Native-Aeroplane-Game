@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { NavigationColors } from '../../theme/Variables';
 import { Colors } from '../../theme/Variables';
 
 export const styles = StyleSheet.create({

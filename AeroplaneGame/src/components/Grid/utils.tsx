@@ -12,11 +12,6 @@ export const generateGridArr = (factor: number, randomCell: { row: number; colum
   return gridArr;
 };
 
-// export const randomCell = (factor: number) =>  return {
-//   column: Math.floor(Math.random() * (factor - 1)) + 1,
-//   row: Math.floor(Math.random() * (factor - 1)) + 1,
-// };
-
 export const getRandomCell = (factor: number) => {
   const randomCell = {
     column: Math.floor(Math.random() * (factor - 1)) + 1,

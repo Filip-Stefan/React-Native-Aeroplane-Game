@@ -17,7 +17,6 @@ const Leaderboard = () => {
     const value = await AsyncStorage.getItem('@leaderboards');
 
     if (value !== null) {
-      console.log('NU E NULL');
       const parsedArr = JSON.parse(value);
       setLeaderboard(
         parsedArr?.sort(
@@ -33,7 +32,6 @@ const Leaderboard = () => {
     const refresh = navigation.addListener('focus', () => {
       getLb();
       !!leaderboard?.length && leaderboard.sort((a, b) => parseInt(a.count, 10) - parseInt(b.count, 10));
-      console.log(leaderboard);
     });
 
     return refresh;
@@ -43,7 +41,7 @@ const Leaderboard = () => {
     !!leaderboard?.length &&
     leaderboard?.map((item, index) => {
       return (
-        <View style={[styles.itemContainer, isDark && styles.darkBorder]}>
+        <View style={[styles.itemContainer, isDark && styles.darkBorder]} key={index}>
           <View style={styles.firstRow}>
             <Text style={[styles.standingText, isDark && styles.darkText]}>{index + 1 + '.'}</Text>
             <Text style={isDark && styles.darkText}>{'Strikes: ' + item.count}</Text>

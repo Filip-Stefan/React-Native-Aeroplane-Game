@@ -13,7 +13,6 @@ export const styles = StyleSheet.create({
   standingText: {
     fontWeight: '600',
     width: '10%',
-    // alignSelf: 'flex-start',
   },
   countText: {
     width: '10%',

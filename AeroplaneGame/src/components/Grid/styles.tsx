@@ -24,4 +24,12 @@ export const styles = StyleSheet.create({
     height: 45,
     width: 45,
   },
+  strikesText: {
+    fontSize: 20,
+    color: Colors.textGray800,
+    marginVertical: 10,
+  },
+  strikesDark: {
+    color: Colors.textGray200,
+  },
 });
