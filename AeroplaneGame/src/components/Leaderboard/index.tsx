@@ -8,10 +8,9 @@ import { styles } from './styles';
 
 const Leaderboard = () => {
   const { darkMode: isDark } = useTheme();
-
   const navigation = useNavigation();
 
-  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string }[]>();
+  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string; time: string }[]>();
 
   const getLb = async () => {
     const value = await AsyncStorage.getItem('@leaderboards');
@@ -24,6 +23,7 @@ const Leaderboard = () => {
             parseInt(a.count, 10) - parseInt(b.count, 10),
         ),
       );
+
       return JSON.parse(value);
     }
   };
@@ -46,6 +46,7 @@ const Leaderboard = () => {
             <Text style={[styles.standingText, isDark && styles.darkText]}>{index + 1 + '.'}</Text>
             <Text style={isDark && styles.darkText}>{'Strikes: ' + item.count}</Text>
           </View>
+          <Text style={isDark && styles.darkText}>{'Time: ' + item.time}</Text>
           <Text style={[styles.dateText, isDark && styles.darkText]}>{'Date : ' + item.date}</Text>
         </View>
       );

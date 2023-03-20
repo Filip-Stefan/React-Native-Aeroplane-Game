@@ -5,7 +5,7 @@ import { FlatGrid } from 'react-native-super-grid';
 import { useTheme } from '../../hooks';
 import GameButton from '../Button';
 import { styles } from './styles';
-import { generateGridArr, getRandomCell } from './utils';
+import { generateGridArr, getRandomCell, toMinutesAndSeconds } from './utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface GridInterface {
@@ -20,7 +20,7 @@ const Grid = (props: GridInterface) => {
   const { darkMode: isDark } = useTheme();
 
   const [planeDestroyed, setPlaneIsDestroyed] = useState(false);
-  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string }[]>([]);
+  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string; time: string }[]>([]);
 
   const strikeRef = useRef(0);
   const planeRef = useRef(false);
@@ -44,10 +44,15 @@ const Grid = (props: GridInterface) => {
 
   const setPlane = useCallback(
     (striken?: boolean) => {
-      strikeRef.current === 0 && (timeRef.current = dayjs().unix());
-      planeRef.current === true &&
+      !striken && timeRef.current === 0 && (timeRef.current = dayjs().unix());
+      striken &&
+        timeRef.current !== 0 &&
         leaderboard.length >= 0 &&
-        leaderboard.push({ count: strikeRef.current.toString(), date: dayjs().toString() });
+        leaderboard.push({
+          count: strikeRef.current.toString(),
+          date: dayjs().format('MMMM D, YYYY h:mm A').toString(),
+          time: toMinutesAndSeconds(dayjs().unix() - timeRef.current),
+        });
       planeRef.current === true && leaderboard.length && updateLb(leaderboard);
       return planeRef.current && setPlaneIsDestroyed(!!striken);
     },
@@ -76,15 +81,18 @@ const Grid = (props: GridInterface) => {
           />
         )}
       />
+
       {planeDestroyed && (
         <Text style={[styles.strikesText, isDark && styles.strikesDark]}>{'Strike counter: ' + strikeRef.current}</Text>
       )}
+
       {planeDestroyed && (
         <GameButton
           title={'Refresh'}
           onPress={() => {
             planeRef.current = false;
             strikeRef.current = 0;
+            timeRef.current = 0;
             setPlaneIsDestroyed(false);
           }}
         />

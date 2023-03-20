@@ -12,6 +12,13 @@ export const generateGridArr = (factor: number, randomCell: { row: number; colum
   return gridArr;
 };
 
+export const toMinutesAndSeconds = (totalSeconds: number) => {
+  const totalMs = totalSeconds * 1000;
+  const result = new Date(totalMs).toISOString().slice(11, 19);
+
+  return result;
+};
+
 export const getRandomCell = (factor: number) => {
   const randomCell = {
     column: Math.floor(Math.random() * (factor - 1)) + 1,

@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   wrapper: { height: '100%', width: '100%' },
   itemContainer: {
     width: '90%',
-    height: 60,
+    height: 70,
     justifyContent: 'center',
     alignSelf: 'center',
     borderBottomWidth: 1,
@@ -22,6 +22,9 @@ export const styles = StyleSheet.create({
   },
   firstRow: {
     flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '80%',
+    marginBottom: 10,
   },
   darkText: { color: Colors.textGray200 },
   darkBorder: { borderColor: Colors.textGray200 },
