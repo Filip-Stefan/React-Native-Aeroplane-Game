@@ -11,9 +11,6 @@ const GameScreen = () => {
   const dispatch = useDispatch();
 
   const [factor, setFactor] = useState(5);
-  const getFactor = (fact: number) => {
-    setFactor(fact);
-  };
 
   const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
     dispatch(changeTheme({ theme, darkMode }));

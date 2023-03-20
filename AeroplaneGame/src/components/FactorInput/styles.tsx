@@ -1,3 +1,4 @@
+import { Colors } from '../../theme/Variables';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -16,5 +17,14 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 5,
     marginRight: 10,
+  },
+  inputDark: {
+    borderColor: Colors.textGray200,
+    color: Colors.textGray200,
+  },
+  warning: {
+    color: 'red',
+    alignSelf: 'center',
+    marginVertical: 10,
   },
 });

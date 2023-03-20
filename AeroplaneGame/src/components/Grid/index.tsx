@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text } from 'react-native';
 import dayjs from 'dayjs';
 import { FlatGrid } from 'react-native-super-grid';
 import { useTheme } from '../../hooks';
 import { GameButton } from '../index';
+import { Item } from './Item';
 import { styles } from './styles';
 import { generateGridArr, getRandomCell, toMinutesAndSeconds } from './utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,16 +15,14 @@ interface GridInterface {
    */
   factor: number;
 }
-
-const windowDimensions = Dimensions.get('window');
-
 const Grid = (props: GridInterface) => {
   const { factor } = props;
 
   const { darkMode: isDark } = useTheme();
 
-  const [planeDestroyed, setPlaneIsDestroyed] = useState(false);
+  const [planeDestroyed, setPlaneIsDestroyed] = useState<boolean>();
   const [leaderboard, setLeaderboard] = useState<{ count: string; date: string; time: string }[]>([]);
+  const [key, setKey] = useState(0);
 
   const strikeRef = useRef(0);
   const planeRef = useRef(false);
@@ -33,7 +32,6 @@ const Grid = (props: GridInterface) => {
     const value = await AsyncStorage.getItem('@leaderboards');
     if (value !== null) {
       setLeaderboard(JSON.parse(value));
-      return JSON.parse(value);
     }
   };
 
@@ -67,12 +65,13 @@ const Grid = (props: GridInterface) => {
       <FlatGrid
         itemDimension={30}
         data={generateGridArr(factor, getRandomCell(factor))}
-        spacing={4}
+        spacing={3}
         maxItemsPerRow={factor}
-        staticDimension={factor * 30 + factor * 8}
+        staticDimension={factor * 30 + factor * 6}
+        key={key}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.gridLight, isDark && styles.gridDark]}
+          <Item
+            isPlane={item.isPlane}
             onPress={() => {
               item.isPlane && (planeRef.current = true);
               strikeRef.current = strikeRef.current + 1;
@@ -94,6 +93,7 @@ const Grid = (props: GridInterface) => {
             strikeRef.current = 0;
             timeRef.current = 0;
             setPlaneIsDestroyed(false);
+            setKey(key + 1);
           }}
         />
       )}
