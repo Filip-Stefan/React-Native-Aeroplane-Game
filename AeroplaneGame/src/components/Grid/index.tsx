@@ -25,7 +25,7 @@ const Grid = (props: GridInterface) => {
   // const dispatch = useDispatch();
 
   const [planeDestroyed, setPlaneIsDestroyed] = useState(false);
-  const [leaderboard, setLeaderboard] = useState<string[]>([]);
+  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string }[]>([]);
 
   const strikeRef = useRef(0);
   const planeRef = useRef(false);
@@ -42,14 +42,14 @@ const Grid = (props: GridInterface) => {
     }
   };
 
-  const updateLb = async (lb: string[]) => {
+  const updateLb = async (lb: { count: string; date: string }[]) => {
     await AsyncStorage.setItem('@leaderboards', JSON.stringify(lb));
   };
 
   useEffect(() => {
     getLb();
   }, []);
-  console.log('LEADERBOARD: ' + leaderboard);
+  console.log('LEADERBOARD: ' + leaderboard?.[leaderboard.length - 1]?.date);
   // const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
   //   dispatch(changeTheme({ theme, darkMode }));
   // };
@@ -59,7 +59,9 @@ const Grid = (props: GridInterface) => {
       strikeRef.current === 0 && (timeRef.current = dayjs().unix());
       planeRef.current === true && console.log('TIME: ' + dayjs().diff(timeRef.current, 'day'));
       planeRef.current === true && console.log(timeRef.current);
-      planeRef.current === true && leaderboard.length >= 0 && leaderboard.push(strikeRef.current.toString());
+      planeRef.current === true &&
+        leaderboard.length >= 0 &&
+        leaderboard.push({ count: strikeRef.current.toString(), date: dayjs().toString() });
       planeRef.current === true && leaderboard.length && updateLb(leaderboard);
       return planeRef.current && setPlaneIsDestroyed(!!striken);
     },
