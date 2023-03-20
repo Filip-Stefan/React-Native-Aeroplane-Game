@@ -3,12 +3,15 @@ import { View, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../../hooks';
 import { styles } from './styles';
 
 const Leaderboard = () => {
-  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string }[]>();
+  const { darkMode: isDark } = useTheme();
 
   const navigation = useNavigation();
+
+  const [leaderboard, setLeaderboard] = useState<{ count: string; date: string }[]>();
 
   const getLb = async () => {
     const value = await AsyncStorage.getItem('@leaderboards');
@@ -40,10 +43,12 @@ const Leaderboard = () => {
     !!leaderboard?.length &&
     leaderboard?.map((item, index) => {
       return (
-        <View style={styles.itemContainer}>
-          <Text>{index + 1 + '.'}</Text>
-          <Text>{item.count}</Text>
-          <Text>{item.date}</Text>
+        <View style={[styles.itemContainer, isDark && styles.darkBorder]}>
+          <View style={styles.firstRow}>
+            <Text style={[styles.standingText, isDark && styles.darkText]}>{index + 1 + '.'}</Text>
+            <Text style={isDark && styles.darkText}>{'Strikes: ' + item.count}</Text>
+          </View>
+          <Text style={[styles.dateText, isDark && styles.darkText]}>{'Date : ' + item.date}</Text>
         </View>
       );
     });
