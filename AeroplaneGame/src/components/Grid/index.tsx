@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import dayjs from 'dayjs';
 import { FlatGrid } from 'react-native-super-grid';
 import { useTheme } from '../../hooks';
-import GameButton from '../Button';
+import { GameButton } from '../index';
 import { styles } from './styles';
 import { generateGridArr, getRandomCell, toMinutesAndSeconds } from './utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,6 +14,9 @@ interface GridInterface {
    */
   factor: number;
 }
+
+const windowDimensions = Dimensions.get('window');
+
 const Grid = (props: GridInterface) => {
   const { factor } = props;
 
@@ -62,13 +65,11 @@ const Grid = (props: GridInterface) => {
   return (
     <View style={styles.gridWrapper}>
       <FlatGrid
-        itemDimension={50}
+        itemDimension={30}
         data={generateGridArr(factor, getRandomCell(factor))}
-        spacing={5}
-        adjustGridToStyles={true}
-        style={styles.gridContainer}
+        spacing={4}
         maxItemsPerRow={factor}
-        staticDimension={factor * 50 + factor * 10}
+        staticDimension={factor * 30 + factor * 8}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[styles.gridLight, isDark && styles.gridDark]}
@@ -85,7 +86,6 @@ const Grid = (props: GridInterface) => {
       {planeDestroyed && (
         <Text style={[styles.strikesText, isDark && styles.strikesDark]}>{'Strike counter: ' + strikeRef.current}</Text>
       )}
-
       {planeDestroyed && (
         <GameButton
           title={'Refresh'}

@@ -7,13 +7,20 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'lightgrey',
   },
+  titleSmall: {
+    fontSize: 14,
+  },
   container: {
     height: 50,
-    width: 150,
     backgroundColor: 'darkblue',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 25,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+  },
+  small: {
+    height: 35,
+    paddingHorizontal: 5,
   },
   containerDark: {
     backgroundColor: Colors.primary,

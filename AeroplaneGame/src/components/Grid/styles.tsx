@@ -3,15 +3,16 @@ import { Colors } from '../../theme/Variables';
 
 export const styles = StyleSheet.create({
   gridWrapper: {
-    width: '100%',
-    height: '50%',
+    // width: '100%',
+    // height: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
   },
-  gridContainer: { maxWidth: 500, maxHeight: 500 },
+  gridContainer: { maxHeight: 500 },
   gridLight: {
-    minHeight: 50,
+    maxWidth: 30,
+    minHeight: 30,
     borderRadius: 10,
     backgroundColor: Colors.textGray200,
     alignItems: 'center',
