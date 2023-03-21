@@ -24,7 +24,7 @@ export const Item = (props: ItemInterface) => {
     if (isPlane && !reset) {
       return setItemStyle([styles.gridLight, { backgroundColor: 'red' }]);
     }
-    return setItemStyle([styles.gridLight, { backgroundColor: 'black' }]);
+    return setItemStyle([styles.gridLight, { backgroundColor: isDark ? 'darksalmon' : 'black' }]);
   };
 
   return (
