@@ -14,9 +14,13 @@ interface GridInterface {
    * Number of rows and columns
    */
   factor: number;
+  /**
+   * Number of planes on the grid
+   */
+  nrOfPlanes: number;
 }
 const Grid = (props: GridInterface) => {
-  const { factor } = props;
+  const { factor, nrOfPlanes } = props;
 
   const { darkMode: isDark } = useTheme();
 
@@ -25,7 +29,7 @@ const Grid = (props: GridInterface) => {
   const [key, setKey] = useState(0);
 
   const strikeRef = useRef(0);
-  const planeRef = useRef(false);
+  const planeRef = useRef(0);
   const timeRef = useRef(0);
 
   const getLb = async () => {
@@ -54,17 +58,17 @@ const Grid = (props: GridInterface) => {
           date: dayjs().format('MMMM D, YYYY h:mm A').toString(),
           time: toMinutesAndSeconds(dayjs().unix() - timeRef.current),
         });
-      planeRef.current === true && leaderboard.length && updateLb(leaderboard);
-      return planeRef.current && setPlaneIsDestroyed(!!striken);
+      planeRef.current === nrOfPlanes && leaderboard.length && updateLb(leaderboard);
+      return planeRef.current === nrOfPlanes && setPlaneIsDestroyed(!!striken);
     },
     [planeRef.current],
   );
-
+  console.log('GRID: ' + nrOfPlanes);
   return (
     <View style={styles.gridWrapper}>
       <FlatGrid
         itemDimension={30}
-        data={generateGridArr(factor, getRandomCell(factor))}
+        data={generateGridArr(factor, getRandomCell(factor, nrOfPlanes))}
         spacing={3}
         maxItemsPerRow={factor}
         staticDimension={factor * 30 + factor * 6}
@@ -73,7 +77,7 @@ const Grid = (props: GridInterface) => {
           <Item
             isPlane={item.isPlane}
             onPress={() => {
-              item.isPlane && (planeRef.current = true);
+              item.isPlane && (planeRef.current = planeRef.current + 1);
               strikeRef.current = strikeRef.current + 1;
               setPlane(item.isPlane);
             }}
@@ -89,7 +93,7 @@ const Grid = (props: GridInterface) => {
         <GameButton
           title={'Refresh'}
           onPress={() => {
-            planeRef.current = false;
+            planeRef.current = 0;
             strikeRef.current = 0;
             timeRef.current = 0;
             setPlaneIsDestroyed(false);

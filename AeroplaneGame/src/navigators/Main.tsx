@@ -1,11 +1,11 @@
 import React from 'react';
 import { Game, LeaderboardScreen } from '../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import FastImage from 'react-native-fast-image';
 import plane from '../resources/images/plane.png';
 import leaderboard from '../resources/images/leaderboard.png';
 import { styles } from './styles';
 import { useTheme } from '../hooks';
+import { Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,12 +20,7 @@ const MainNavigator = () => {
         options={{
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: () => (
-            <FastImage
-              source={plane}
-              style={styles.icon}
-              resizeMode={'contain'}
-              tintColor={isDark ? styles.iconDark.color : styles.icon.color}
-            />
+            <Image source={plane} style={[styles.icon, isDark && styles.iconDark]} resizeMode={'contain'} />
           ),
         }}
       />
@@ -35,12 +30,7 @@ const MainNavigator = () => {
         options={{
           // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: () => (
-            <FastImage
-              source={leaderboard}
-              style={styles.icon}
-              tintColor={isDark ? styles.iconDark.color : styles.icon.color}
-              resizeMode={'contain'}
-            />
+            <Image source={leaderboard} style={[styles.icon, isDark && styles.iconDark]} resizeMode={'contain'} />
           ),
         }}
       />

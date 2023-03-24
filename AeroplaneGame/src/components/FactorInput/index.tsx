@@ -17,17 +17,17 @@ const FactorInput = (props: FactorInterface) => {
 
   const parsedText = parseInt(text, 10);
   const diffCondition = parsedText >= 5 && parsedText <= 10;
-
-  const renderWarning = () => {
-    const getText = () => {
-      if (parsedText < 5) {
-        return 'Difficulty level cannot be lower than 5!';
-      } else if (parsedText > 10) {
-        return 'Difficulty level cannot be higher than 10!';
-      }
-    };
-    return <Text style={styles.warning}>{getText()} </Text>;
-  };
+  console.log(text);
+  // const renderWarning = () => {
+  //   const getText = () => {
+  //     if (parsedText < 5) {
+  //       return 'Difficulty level cannot be lower than 5!';
+  //     } else if (parsedText > 10) {
+  //       return 'Difficulty level cannot be higher than 10!';
+  //     }
+  //   };
+  //   return <Text style={styles.warning}>{getText()} </Text>;
+  // };
 
   return (
     <>
@@ -37,7 +37,10 @@ const FactorInput = (props: FactorInterface) => {
           onChangeText={onChangeText}
           value={text}
           defaultValue={'5'}
-          onEndEditing={() => onSubmit(parseInt(text, 10))}
+          onEndEditing={() => {
+            onSubmit(parseInt(text, 10));
+            console.log('input edited');
+          }}
         />
         <GameButton
           title={'Change difficulty'}
@@ -45,7 +48,7 @@ const FactorInput = (props: FactorInterface) => {
           smallSize={true}
         />
       </View>
-      {renderWarning()}
+      {/* {renderWarning()} */}
     </>
   );
 };
